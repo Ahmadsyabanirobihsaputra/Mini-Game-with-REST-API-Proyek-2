@@ -1,0 +1,87 @@
+
+
+ 1️. Tujuan Proyek
+
+Proyek ini bertujuan untuk membuat sebuah game Blackjack dua pemain menggunakan Windows Forms (WinForms) sebagai
+antarmuka pengguna (UI) dan ASP.NET Core Web API (Swagger) sebagai server backend. Sistem ini dirancang agar pemain 
+dapat bermain secara interaktif melawan dealer, sambil mencatat skor ke dalam leaderboard yang tersimpan di server.
+WinForms bertugas menampilkan permainan secara visual dan mengirim data ke server, sementara server bertanggung jawab 
+atas logika permainan seperti pembuatan deck, penghitungan skor, dan penentuan pemenang.
+
+
+
+ 2️. Arsitektur Sistem
+
+Sistem ini menggunakan arsitektur client–server, di mana aplikasi WinForms berperan sebagai client dan Swagger API 
+sebagai server. Client menampilkan antarmuka untuk pemain dan mengirim permintaan ke server melalui protokol HTTP. 
+Server kemudian memproses permintaan tersebut dan mengirimkan hasil berupa data JSON kembali ke client. 
+
+
+
+ 3️. Cara Kerja Umum Sistem
+
+Ketika permainan dimulai, pemain pertama mengisi nama dan menekan tombol Start Game, yang mengirimkan permintaan
+ke server untuk memulai ronde baru. Server akan mengocok deck dan mengirimkan dua kartu awal untuk setiap pemain
+dan dealer. Pemain kedua dapat bergabung dengan menekan tombol Join Player 2, yang menampilkan kolom nama dan area
+kartu tambahan di UI. Selama permainan, pemain dapat memilih untuk Draw (menarik kartu) atau Stand (berhenti menarik kartu). 
+Setiap kali pemain menarik kartu, client mengirim permintaan ke server untuk menghitung ulang skor dan memeriksa 
+apakah pemain kalah (bust). Setelah kedua pemain selesai, dealer otomatis menarik kartu hingga mencapai minimal 17 poin,
+dan server menentukan hasil akhir. Pemain dapat menyimpan skor mereka ke leaderboard menggunakan tombol Submit, 
+dan melihat hasilnya melalui tombol Refresh Leaderboard.
+
+
+
+ 4️. Penjelasan UI (Form1.cs)
+
+Antarmuka dibuat menggunakan WinForms dengan beberapa elemen utama. Dua kotak teks (`txtPlayer1` dan `txtPlayer2`)
+digunakan untuk memasukkan nama pemain. Tombol Join Player 2 berfungsi untuk mengaktifkan mode dua pemain dan
+menampilkan area tambahan bagi pemain kedua di sisi kanan dealer. Tombol Start Game memulai ronde baru, sementara 
+tombol Draw dan Stand digunakan untuk melakukan aksi permainan. Tiga daftar (`lstPlayer1Cards`, `lstPlayer2Cards`,
+dan `lstDealerCards`) menampilkan kartu yang dimiliki masing-masing pihak. Label skor (`lblPlayer1Score`, `lblPlayer2Score`,
+dan `lblDealerScore`) memperlihatkan nilai sementara. Selain itu, leaderboard ditampilkan menggunakan `DataGridView` agar 
+pemain dapat melihat daftar skor tertinggi. 
+
+
+
+ 5️. Penjelasan Server (Swagger API)
+
+Server dibangun menggunakan ASP.NET Core Web API dengan dokumentasi interaktif melalui Swagger (Swashbuckle). 
+Server memiliki beberapa endpoint utama: `/api/game/start` untuk memulai permainan baru, `/api/game/draw` 
+untuk menarik kartu, `/api/game/stand` untuk berhenti menarik kartu, dan `/api/leaderboard` untuk mengelola
+daftar skor pemain. Swagger memudahkan pengujian dan debugging dengan menampilkan semua endpoint dalam satu 
+halaman antarmuka web. Saat server dijalankan, Swagger dapat diakses melalui `https://localhost:5001/swagger`, 
+di mana pengguna dapat mencoba setiap endpoint secara langsung dan melihat hasil respon dalam format JSON.
+
+
+
+ 6️. Alur Komunikasi Client–Server
+
+Setiap kali pemain menekan tombol di aplikasi WinForms, aplikasi tersebut mengirim permintaan HTTP ke server 
+melalui metode yang telah ditentukan. Server kemudian memproses permintaan, menghitung hasilnya 
+(misalnya kartu baru atau skor pemain), lalu mengembalikan data dalam format JSON. Client menampilkan hasil 
+tersebut di antarmuka pengguna, memperbarui kartu, skor, atau leaderboard sesuai respon dari server. Dengan 
+pola komunikasi ini, semua data permainan disinkronkan secara real-time antara UI dan server, memastikan hasil
+yang akurat tanpa perlu memproses logika game secara lokal di sisi client.
+
+
+
+7.  Alur Permainan
+
+Pada awal permainan, Player 1 dan Player 2 masing-masing menerima dua kartu dari server. 
+Pemain dapat memilih untuk menarik kartu tambahan (Draw) atau berhenti (Stand). Server memantau skor 
+setiap pemain dan menentukan apakah mereka kalah (bust) jika skor melebihi 21. Setelah semua pemain selesai, 
+dealer secara otomatis menarik kartu hingga mencapai minimal 17 poin. Server kemudian menentukan pemenang 
+berdasarkan perbandingan skor terdekat dengan 21. Hasil akhir dikirim kembali ke client, dan pemain dapat 
+menyimpan skor mereka ke leaderboard agar tercatat di sistem.
+
+
+
+8. Teknologi yang Digunakan
+
+Proyek ini menggunakan C .NET dengan dua komponen utama: WinForms sebagai frontend dan ASP.NET Core Web
+API sebagai backend. Swagger digunakan untuk dokumentasi dan pengujian API, sedangkan data leaderboard disimpan 
+dalam database sederhana menggunakan Entity Framework Core atau file JSON, tergantung konfigurasi. Komunikasi antara 
+client dan server dilakukan melalui HTTP dengan pertukaran data dalam format JSON. 
+
+
+
